@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Weather</string>
+    <string name="city_name">New York</string>
+    <string name="city_desc">Sunny</string>
+    <string name="city_temp">24°C</string>
+    <string name="weather_pic_desc">Sunshine</string>
+    <string name="button_text">Favorites</string>
+</resources>

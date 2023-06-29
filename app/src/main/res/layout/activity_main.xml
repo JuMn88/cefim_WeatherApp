@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_height="@dimen/activity_height"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginVertical="@dimen/activity_vertical_margin"
+        android:background="@color/background_orange">
+
+        <TextView
+            android:layout_height="@dimen/dashboard_height"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dashboard_padding"
+            android:gravity="center_vertical"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:text="@string/app_name" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/city_name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/city_name_text_size"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/city_desc"
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/weather_info_margin">
+
+                <ImageView
+                    android:layout_width="@dimen/weather_pic_size"
+                    android:layout_height="@dimen/weather_pic_size"
+                    android:scaleType="fitStart"
+                    android:src="@drawable/weather_sunny_white"
+                    android:contentDescription="@string/weather_pic_desc" />
+
+                <TextView
+                    android:layout_height="@dimen/weather_pic_size"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="end|center"
+                    android:text="@string/city_temp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/city_temp_text_size"
+                    android:fontFamily="sans-serif-light"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fav_button_margin"
+        android:text="@string/button_text" />
+</RelativeLayout>
