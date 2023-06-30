@@ -17,5 +17,6 @@
     <dimen name="city_temp_padding_end">16dp</dimen>
     <dimen name="city_temp_text_size">50sp</dimen>
 
-    <dimen name="fav_button_margin">10dp</dimen>
+    <dimen name="button_margin">10dp</dimen>
+
 </resources>

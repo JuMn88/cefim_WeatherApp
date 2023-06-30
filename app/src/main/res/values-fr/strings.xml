@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="activity_no_connexion">Pas de connexion Internet</string>
     <string name="app_name">Météo</string>
     <string name="city_name">New York</string>
     <string name="city_desc">Ensoleillé</string>
     <string name="city_temp">24°C</string>
     <string name="weather_pic_desc">Grand soleil</string>
-    <string name="button_text">Favoris</string>
+    <string name="button_1_text">Bouton 1</string>
+    <string name="button_2_text">Bouton 2</string>
+    <string name="button_favorites_text">Favoris</string>
 </resources>

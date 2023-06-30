@@ -3,22 +3,21 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <TextView
+        android:id="@+id/activity_no_connexion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/activity_no_connexion"/>
+
     <LinearLayout
+        android:id="@+id/activity_linear_main"
         android:layout_height="@dimen/activity_height"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_marginVertical="@dimen/activity_vertical_margin"
         android:background="@color/background_orange">
-
-        <TextView
-            android:layout_height="@dimen/dashboard_height"
-            android:layout_width="match_parent"
-            android:padding="@dimen/dashboard_padding"
-            android:gravity="center_vertical"
-            android:background="@color/colorPrimary"
-            android:textColor="@color/white"
-            android:text="@string/app_name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,10 +26,10 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/text_view_city_name"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/city_name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/city_name_text_size"
                 android:textStyle="bold"/>
@@ -46,7 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="@dimen/weather_info_margin">
+                android:layout_margin="@dimen/weather_info_margin"
+                android:gravity="center">
 
                 <ImageView
                     android:layout_width="@dimen/weather_pic_size"
@@ -56,7 +56,7 @@
                     android:contentDescription="@string/weather_pic_desc" />
 
                 <TextView
-                    android:layout_height="@dimen/weather_pic_size"
+                    android:layout_height="wrap_content"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:gravity="end|center"
@@ -66,13 +66,46 @@
                     android:fontFamily="sans-serif-light"/>
 
             </LinearLayout>
+
         </LinearLayout>
+
     </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/fav_button_margin"
-        android:text="@string/button_text" />
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/activity_button_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/button_margin"
+            android:textSize="11sp"
+            android:text="@string/button_1_text"
+            android:onClick="onClickButton" />
+
+        <Button
+            android:id="@+id/activity_button_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/button_margin"
+            android:textSize="11sp"
+            android:text="@string/button_2_text" />
+
+        <Button
+            android:id="@+id/activity_button_favorites"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/button_margin"
+            android:textSize="11sp"
+            android:text="@string/button_favorites_text"
+            android:onClick="onClickButton" />
+
+    </LinearLayout>
+
 </RelativeLayout>
