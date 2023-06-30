@@ -18,5 +18,11 @@
     <dimen name="city_temp_text_size">50sp</dimen>
 
     <dimen name="button_margin">10dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="fab_size">44dp</dimen>
+    <dimen name="edit_text_width">250dp</dimen>
+    <dimen name="edit_text_padding_top">200dp</dimen>
 
 </resources>

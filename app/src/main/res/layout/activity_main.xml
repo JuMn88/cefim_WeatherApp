@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/activity_no_connexion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/activity_no_connexion"/>
+        android:text="@string/activity_no_connexion"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/activity_linear_main"
@@ -32,7 +35,9 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/white"
                 android:textSize="@dimen/city_name_text_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="@string/city_name"/>
+                <!-- tools:text permet de visualiser le texte attendu après compilation-->
 
             <TextView
                 android:layout_height="wrap_content"
@@ -71,41 +76,24 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/edit_text_message"
+        android:layout_width="@dimen/edit_text_width"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="@dimen/edit_text_padding_top"
+        android:hint="@string/edit_text_message"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/activity_button_favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/button_margin"
         android:layout_alignParentBottom="true"
-        android:gravity="center">
-
-        <Button
-            android:id="@+id/activity_button_1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
-            android:textSize="11sp"
-            android:text="@string/button_1_text"
-            android:onClick="onClickButton" />
-
-        <Button
-            android:id="@+id/activity_button_2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
-            android:textSize="11sp"
-            android:text="@string/button_2_text" />
-
-        <Button
-            android:id="@+id/activity_button_favorites"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="@dimen/button_margin"
-            android:textSize="11sp"
-            android:text="@string/button_favorites_text"
-            android:onClick="onClickButton" />
-
-    </LinearLayout>
+        android:layout_alignParentEnd="true"
+        android:textSize="11sp"
+        android:text="@string/button_favorites_text"
+        android:onClick="onClickButtonFavorites" />
 
 </RelativeLayout>
