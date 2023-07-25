@@ -24,5 +24,10 @@
     <dimen name="fab_size">44dp</dimen>
     <dimen name="edit_text_width">250dp</dimen>
     <dimen name="edit_text_padding_top">200dp</dimen>
+    <dimen name="item_favorite_city_height">88dp</dimen>
+
+    <dimen name="list_city_name_text_size">20sp</dimen>
+    <dimen name="list_description_text_size">12sp</dimen>
+    <dimen name="list_temp_text_size">18sp</dimen>
 
 </resources>

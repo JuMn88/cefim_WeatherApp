@@ -100,4 +100,5 @@
     <string name="action_settings">Paramètres</string>
     <string name="edit_text_message">Votre message</string>
     <string name="favorites_text_view_default">Vous avez oublié quelque chose...</string>
+    <string name="favorites_alert_title">Recherche</string>
 </resources>
