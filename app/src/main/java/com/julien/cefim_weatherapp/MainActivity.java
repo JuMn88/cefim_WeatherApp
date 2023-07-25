@@ -1,5 +1,6 @@
 package com.julien.cefim_weatherapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -15,6 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttp;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private LinearLayout mLinearLayoutMain;
@@ -22,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextViewCityName;
     private EditText mEditTextMessage;
     private Button mButtonFavorites;
+    private OkHttpClient mOkHttpClient; // Client en charge des requêtes http
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,42 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, mTextViewCityName.getText(), Toast.LENGTH_SHORT).show();
 
         mEditTextMessage = findViewById(R.id.edit_text_message);
+
+        mOkHttpClient = new OkHttpClient();
+
+        // Vérification de la connexion
+        connexionCheck();
+    }
+
+    private void connexionCheck() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+            Log.d("lol", "Connexion à internet établie ! We are live !");
+            // Appel API
+            apiCall();
+        } else {
+            Log.d("lol", "Y a pas de connexion. C'est Bestel, chef : il a voulu brancher le truc sur sa CB, ça a fait Pffffii !");
+            // Echec connexion
+        }
+    }
+
+    private void apiCall() {
+        Request request = new Request.Builder().url("https://api.openweathermap.org/data/2.5/weather?lat=47.390026&lon=0.688891&appid=01897e497239c8aff78d9b8538fb24ea&units=metric&lang=fr").build();
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String stringJson = response.body().string();
+                    Log.d("lol", "Nous recevons une communication à distance : " + stringJson);
+                }
+            }
+        });
     }
 
     @Override
