@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.julien.cefim_weatherapp.adapters.FavoriteAdapter;
 import com.julien.cefim_weatherapp.databinding.ActivityFavoriteBinding;
 import com.julien.cefim_weatherapp.models.City;
+import com.julien.cefim_weatherapp.utils.Util;
 import com.julien.cefim_weatherapp.utils.UtilAPI;
 
 import org.json.JSONException;
@@ -120,19 +121,17 @@ public class FavoriteActivity extends AppCompatActivity {
                         runOnUiThread(() -> updateUi(stringJson));
                     }
                 }
-
             });
-            //City city = new City(cityName, "Ensoleillé", "22°C", R.drawable.weather_sunny_grey);
-            //mCities.add(0, city); // L'index à 0 pour que la nouvelle ville apparaisse en haut de la liste
-            //mAdapter.notifyDataSetChanged();
         }
     }
 
     private void updateUi(String stringJson) {
         try {
             City city = new City(stringJson);
-            mCities.add(city);
+            mCities.add(0, city); // L'index à 0 pour que la nouvelle ville apparaisse en haut de la liste
             mAdapter.notifyDataSetChanged();
+            Util.saveFavoriteCities(mContext, mCities);
+            Log.d("lol", "Ville de " + city.mName + " ajoutée aux favoris !");
         } catch (JSONException e) {
             Toast.makeText(mContext, getString(R.string.place_not_found), Toast.LENGTH_SHORT).show();
         }

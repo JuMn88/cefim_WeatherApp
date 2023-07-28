@@ -1,11 +1,16 @@
 package com.julien.cefim_weatherapp.utils;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.julien.cefim_weatherapp.R;
+import com.julien.cefim_weatherapp.models.City;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Util {
@@ -13,6 +18,8 @@ public class Util {
     public final static String CITIES = "cities";
     public static final String CITY = "city";
     public static final String KEY_MESSAGE = "key_message";
+    private static final String PREFS_NAME = "shared_pref";
+    private static final String PREFS_FAVORITE_CITIES = "Favorite Cities";
 
 
     /*
@@ -106,5 +113,17 @@ public class Util {
             return s.substring(0, 1).toUpperCase() + s.substring(1);
         }
         return "";
+    }
+
+    public static void saveFavoriteCities(Context context, ArrayList<City> cities) {
+        JSONArray jsonArrayCities = new JSONArray();
+        for (int i = 0; i < cities.size(); i++) {
+            jsonArrayCities.put(cities.get(i).mStringJson);
+        }
+        SharedPreferences preferences = context.getSharedPreferences(Util.PREFS_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Util.PREFS_FAVORITE_CITIES, jsonArrayCities.toString());
+        editor.apply();
     }
 }
