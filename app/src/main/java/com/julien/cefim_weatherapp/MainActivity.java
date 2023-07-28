@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             // Activité rendue visible
             setActivityVisibility(true);
             // Appel API
-            apiWeatherCall();
+            apiWeatherCallWithCoord();
         } else {
             Log.d("lol", "Y a pas de connexion. C'est Bestel, chef : il a voulu brancher le truc sur sa CB, ça a fait Pffffii !");
             // Affichage non visible
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         binding.activityTextViewNoConnexion.setVisibility(View.GONE);
     }
 
-    private void apiWeatherCall() {
+    private void apiWeatherCallWithCoord() {
         String[] coordinates = {String.valueOf(LAT), String.valueOf(LNG)};
         Request request = new Request.Builder().url("https://api.openweathermap.org/data/2.5/weather?lat=47.390026&lon=0.688891&appid=01897e497239c8aff78d9b8538fb24ea&units=metric&lang=fr").build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {

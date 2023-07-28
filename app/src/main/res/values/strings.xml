@@ -100,4 +100,6 @@
     <string name="edit_text_message">Your message</string>
     <string name="favorites_text_view_default">You forgot something…</string>
     <string name="favorites_alert_title">Search</string>
+    <string name="place_not_found">\"Splush\"</string>
+    <string name="edit_text_dialog_city">Add a city</string>
 </resources>

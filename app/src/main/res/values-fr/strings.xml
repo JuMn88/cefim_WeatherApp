@@ -101,4 +101,6 @@
     <string name="edit_text_message">Votre message</string>
     <string name="favorites_text_view_default">Vous avez oublié quelque chose...</string>
     <string name="favorites_alert_title">Recherche</string>
+    <string name="place_not_found">Dans l\'eau !</string>
+    <string name="edit_text_dialog_city">Ajouter une ville</string>
 </resources>

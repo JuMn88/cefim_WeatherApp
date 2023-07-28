@@ -1,6 +1,7 @@
 package com.julien.cefim_weatherapp;
 
 import android.app.AlertDialog;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,13 +20,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.julien.cefim_weatherapp.adapters.FavoriteAdapter;
 import com.julien.cefim_weatherapp.databinding.ActivityFavoriteBinding;
 import com.julien.cefim_weatherapp.models.City;
+import com.julien.cefim_weatherapp.utils.UtilAPI;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class FavoriteActivity extends AppCompatActivity {
 
@@ -33,6 +46,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private Context mContext;
     private RecyclerView mRecyclerView;
     private FavoriteAdapter mAdapter;
+    private OkHttpClient mOkHttpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,21 +88,54 @@ public class FavoriteActivity extends AppCompatActivity {
                 View v = LayoutInflater.from(mContext).inflate(R.layout.dialog_add_favorite, null);
                 builder.setView(v);
 
-                builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                    addCityDialog(v);
-                });
+                builder.setPositiveButton(android.R.string.ok, (dialogInterface, i) -> addCityDialog(v));
                 builder.setNegativeButton(android.R.string.cancel, null);
                 builder.create().show();
             }
 
-            private void addCityDialog(View v) {
-                EditText editText = v.findViewById(R.id.edit_text_dialog_city);
-                String cityName = editText.getText().toString();
-                City city = new City(cityName, "Ensoleillé", "22°C", R.drawable.weather_sunny_grey);
-                mCities.add(0, city); // L'index à 0 pour que la nouvelle ville apparaisse en haut de la liste
-                mAdapter.notifyDataSetChanged();
-            }
         });
+    }
+
+
+    private void addCityDialog(View v) {
+        final EditText editText = v.findViewById(R.id.edit_text_dialog_city);
+        String cityName = editText.getText().toString();
+        if (cityName.length() > 0) {
+            String[] params = {cityName};
+            String RequestUrl = String.format(UtilAPI.OPEN_WEATHER_MAP_API_CITY_NAME, params);
+            Request request = new Request.Builder().url(RequestUrl).build();
+
+            mOkHttpClient = new OkHttpClient();
+            mOkHttpClient.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    runOnUiThread(() -> Toast.makeText(binding.getRoot().getContext(), "Une erreur est survenue", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    final String stringJson = response.body().string();
+                    if (response.isSuccessful() && UtilAPI.isSuccessful(stringJson)) {
+                        Log.d("lol", "Voilà les infos du QG : " + stringJson);
+                        runOnUiThread(() -> updateUi(stringJson));
+                    }
+                }
+
+            });
+            //City city = new City(cityName, "Ensoleillé", "22°C", R.drawable.weather_sunny_grey);
+            //mCities.add(0, city); // L'index à 0 pour que la nouvelle ville apparaisse en haut de la liste
+            //mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void updateUi(String stringJson) {
+        try {
+            City city = new City(stringJson);
+            mCities.add(city);
+            mAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            Toast.makeText(mContext, getString(R.string.place_not_found), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -123,79 +170,5 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private void init() {
         mCities = new ArrayList<>();
-        City city1 = new City("Montréal", "Légères pluies", "22°C", R.drawable.weather_rainy_grey);
-        City city2 = new City("New York", "Ensoleillé", "22°C", R.drawable.weather_sunny_grey);
-        City city3 = new City("Paris", "Nuageux", "24°C", R.drawable.weather_foggy_grey);
-        City city4 = new City("Toulouse", "Pluies modérées", "20°C", R.drawable.weather_rainy_grey);
-        City city5 = new City("Dunkerque", "Gris", "13°C", R.drawable.weather_foggy_grey);
-        City city6 = new City("Rennes", "Ensoleillé", "23°C", R.drawable.weather_sunny_grey);
-        City city7 = new City("Niort", "Déprime", "14°C", R.drawable.weather_foggy_grey);
-        City city8 = new City("Molsheim", "Pluies modérées", "20°C", R.drawable.weather_rainy_grey);
-
-        // Beaucoup de villes répétées juste pour avoir l'effet de défilement
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
-        mCities.add(city1);
-        mCities.add(city2);
-        mCities.add(city3);
-        mCities.add(city4);
-        mCities.add(city5);
-        mCities.add(city6);
-        mCities.add(city7);
-        mCities.add(city8);
     }
 }
