@@ -3,75 +3,90 @@ package com.julien.cefim_weatherapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.julien.cefim_weatherapp.databinding.ActivityMainBinding;
+import com.julien.cefim_weatherapp.models.City;
+import com.julien.cefim_weatherapp.utils.Util;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout mLinearLayoutMain;
-    private TextView mTextViewNoConnexion;
-    private TextView mTextViewCityName;
-    private EditText mEditTextMessage;
-    private Button mButtonFavorites;
+    private ActivityMainBinding binding;
     private OkHttpClient mOkHttpClient; // Client en charge des requêtes http
+    private City mCurrentCity;
+    private static final double LAT = 40.716709;
+    private static final double LNG = -74.005698;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
         Log.d("lol", "Activité Principale créée chef !");
 
-        mTextViewCityName = findViewById(R.id.text_view_city_name);
-        mTextViewCityName.setText(R.string.city_name);
-        Toast.makeText(this, mTextViewCityName.getText(), Toast.LENGTH_SHORT).show();
-
-        mEditTextMessage = findViewById(R.id.edit_text_message);
+        // Création de la classe associée à la vue
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         mOkHttpClient = new OkHttpClient();
 
         // Vérification de la connexion
-        connexionCheck();
+        checkConnexion();
+
+        Toast.makeText(this, binding.textViewCityName.getText(), Toast.LENGTH_SHORT).show();
+
+        binding.editTextMessage.setText(R.string.edit_text_message);
     }
 
-    private void connexionCheck() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnectedOrConnecting()) {
+    private void checkConnexion() {
+        if (Util.isActiveNetwork(binding.getRoot().getContext())) {
             Log.d("lol", "Connexion à internet établie ! We are live !");
+            // Activité rendue visible
+            setActivityVisibility(true);
             // Appel API
-            apiCall();
+            apiWeatherCall();
         } else {
             Log.d("lol", "Y a pas de connexion. C'est Bestel, chef : il a voulu brancher le truc sur sa CB, ça a fait Pffffii !");
-            // Echec connexion
+            // Affichage non visible
+            setActivityVisibility(false);
         }
     }
 
-    private void apiCall() {
+    private void setActivityVisibility(boolean b) {
+        if (!b) {
+            binding.activityLinearMain.setVisibility(View.GONE);
+            binding.activityButtonFavorites.setVisibility(View.GONE);
+            binding.activityTextViewNoConnexion.setVisibility(View.VISIBLE);
+        }
+        binding.activityLinearMain.setVisibility(View.VISIBLE);
+        binding.activityButtonFavorites.setVisibility(View.VISIBLE);
+        binding.activityTextViewNoConnexion.setVisibility(View.GONE);
+    }
+
+    private void apiWeatherCall() {
+        String[] coordinates = {String.valueOf(LAT), String.valueOf(LNG)};
         Request request = new Request.Builder().url("https://api.openweathermap.org/data/2.5/weather?lat=47.390026&lon=0.688891&appid=01897e497239c8aff78d9b8538fb24ea&units=metric&lang=fr").build();
         mOkHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(binding.getRoot().getContext(), "Une erreur est survenue", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -79,7 +94,25 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     final String stringJson = response.body().string();
                     Log.d("lol", "Nous recevons une communication à distance : " + stringJson);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateUi(stringJson);
+                        }
+                    });
                 }
+            }
+
+            private void updateUi(String stringJson) {
+                try {
+                    mCurrentCity = new City(stringJson);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+                binding.textViewCityName.setText(mCurrentCity.mName);
+                binding.textViewCityDesc.setText(mCurrentCity.mDescription);
+                binding.imageViewCityWeather.setImageResource(mCurrentCity.mWeatherResIconWhite);
+                binding.textViewCityTemp.setText(mCurrentCity.mTemperature);
             }
         });
     }
@@ -89,29 +122,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         Log.d("lol", "Activité Principale relancée ! Gardez bien les mains à l'intérieur du véhicule !");
-
-        mLinearLayoutMain = findViewById(R.id.activity_linear_main);
-        mButtonFavorites = findViewById(R.id.activity_button_favorites);
-        mTextViewNoConnexion = findViewById(R.id.activity_no_connexion);
-
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(
-                Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnected()) {
-            // Oui je suis connecté à internet
-            Log.d("lol", "Oui je suis connecté");
-            mLinearLayoutMain.setVisibility(View.VISIBLE);
-            mButtonFavorites.setVisibility(View.VISIBLE);
-            mTextViewNoConnexion.setVisibility(View.GONE);
-        } else {
-            // Non
-            Log.d("lol", "Ah merde je suis en Edge attends non j'ai plus de barre");
-            mLinearLayoutMain.setVisibility(View.GONE);
-            mButtonFavorites.setVisibility(View.GONE);
-            mTextViewNoConnexion.setVisibility(View.VISIBLE);
-        }
+        checkConnexion();
     }
 
     @Override
@@ -140,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickButtonFavorites (View v) {
         Intent intent = new Intent(this, FavoriteActivity.class);
-        intent.putExtra("message", mEditTextMessage.getText().toString());
+        intent.putExtra("message", binding.editTextMessage.getText().toString());
         startActivity(intent);
     }
 }

@@ -6,7 +6,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/activity_no_connexion"
+        android:id="@+id/activity_text_view_no_connexion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -40,6 +40,7 @@
                 <!-- tools:text permet de visualiser le texte attendu après compilation-->
 
             <TextView
+                android:id="@+id/text_view_city_desc"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -54,13 +55,16 @@
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/image_view_city_weather"
                     android:layout_width="@dimen/weather_pic_size"
                     android:layout_height="@dimen/weather_pic_size"
+                    android:layout_margin="@dimen/weather_info_margin"
                     android:scaleType="fitStart"
                     android:src="@drawable/weather_sunny_white"
                     android:contentDescription="@string/weather_pic_desc" />
 
                 <TextView
+                    android:id="@+id/text_view_city_temp"
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
                     android:layout_weight="1"
