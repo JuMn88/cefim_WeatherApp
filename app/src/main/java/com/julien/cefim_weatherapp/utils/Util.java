@@ -9,6 +9,8 @@ import com.julien.cefim_weatherapp.R;
 import com.julien.cefim_weatherapp.models.City;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -125,5 +127,25 @@ public class Util {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Util.PREFS_FAVORITE_CITIES, jsonArrayCities.toString());
         editor.apply();
+    }
+
+    public static ArrayList<City> initFavoriteCities(Context context) {
+        ArrayList<City> cities = new ArrayList<>();
+
+        SharedPreferences preferences = context.getSharedPreferences(Util.PREFS_NAME, Context.MODE_PRIVATE);
+
+        try {
+            JSONArray jsonArray = new JSONArray(preferences.getString(Util.PREFS_FAVORITE_CITIES,
+                    ""));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObjectCity = new JSONObject(jsonArray.getString(i));
+                City city = new City(jsonObjectCity.toString());
+                cities.add(city);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return cities;
     }
 }

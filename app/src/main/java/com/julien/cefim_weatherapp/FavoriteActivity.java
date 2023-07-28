@@ -52,8 +52,7 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mContext = this;
-
-        init();
+        mCities = Util.initFavoriteCities(mContext);
 
         super.onCreate(savedInstanceState);
 

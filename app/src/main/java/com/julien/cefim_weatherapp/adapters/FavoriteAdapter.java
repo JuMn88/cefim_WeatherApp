@@ -85,6 +85,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     @Override
     public int getItemCount() {
+
+        if (mCities == null) return 0;
         return mCities.size();
     }
 }
